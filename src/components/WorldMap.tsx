@@ -29,7 +29,7 @@ const satellites = [
     textColor: "text-primary",
     borderColor: "border-primary",
     bgGlow: "from-primary/10 to-transparent",
-    position: "top-[12%] right-[10%] md:right-[15%]",
+    position: "top-[18%] right-[10%] md:right-[15%]",
     description: "Lực lượng doanh nhân – những nhà kiến tạo kinh tế, mở rộng giao thương, đưa Việt Nam hội nhập sâu vào chuỗi giá trị toàn cầu.",
     mcScript: `Tiếp theo, chúng ta di chuyển đến Khu Giao Thương – đại diện cho tầng lớp doanh nhân Việt Nam. Trong nền kinh tế thị trường định hướng XHCN, doanh nhân đóng vai trò "cầu nối" giữa sản xuất và thị trường, giữa quốc gia và quốc tế. Họ không chỉ tạo ra của cải vật chất mà còn góp phần giải quyết việc làm, thúc đẩy đổi mới sáng tạo và nâng cao vị thế kinh tế Việt Nam trên trường quốc tế.`,
   },
