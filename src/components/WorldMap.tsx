@@ -16,7 +16,7 @@ const satellites = [
     textColor: "text-glow-cyan",
     borderColor: "border-glow-cyan",
     bgGlow: "from-glow-cyan/10 to-transparent",
-    position: "top-[12%] left-[10%] md:left-[15%]",
+    position: "top-[18%] left-[10%] md:left-[15%]",
     description: "Nền tảng vững chắc của xã hội: giai cấp công nhân tiên phong, nông dân cần cù, trí thức sáng tạo – ba lực lượng hợp nhất thành trụ cột quốc gia.",
     mcScript: `Kính thưa quý vị, hành trình của chúng ta bắt đầu từ Trạm Năng Lượng – nơi hội tụ sức mạnh của ba lực lượng nền tảng: giai cấp công nhân, nông dân và trí thức. Đây không chỉ là liên minh chính trị mà còn là động lực kinh tế-xã hội cốt lõi. Giai cấp công nhân giữ vai trò tiên phong, nông dân là chủ thể của nông nghiệp-nông thôn, trí thức đóng góp tri thức và sáng tạo. Liên minh này tạo nên "dòng năng lượng" không ngừng nuôi dưỡng sự phát triển đất nước.`,
   },
