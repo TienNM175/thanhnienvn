@@ -1,224 +1,238 @@
-import { motion } from "framer-motion";
-import { Swords, BookOpen, Briefcase, Monitor, Vote, Palette, Shield } from "lucide-react";
+// src/stations/Station3Missions.tsx
+import { motion, AnimatePresence } from "framer-motion";
+import { Vote, Briefcase, Palette, Monitor, Shield, ArrowRight, BookOpen, Target, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-interface Mission {
-  id: string;
-  title: string;
-  icon: React.ElementType;
-  field: string;
-  description: string;
-  detail: string;
-}
-
-const missions: Mission[] = [
+// Dữ liệu đã gỡ bỏ yếu tố game (Rank, Type), tập trung vào học thuật
+const roles = [
   {
-    id: "politics",
-    title: "Xung kích Chính trị",
-    icon: Vote,
-    field: "Chính trị",
-    description: "Tiên phong, gương mẫu thực hiện nhiệm vụ Đảng, Nhà nước giao phó",
-    detail: "Thanh niên luôn thể hiện tinh thần xả thân qua các cuộc chiến tranh giữ nước và là lực lượng nòng cốt trong kiến thiết đất nước. Dẫn đầu xu hướng toàn cầu hóa, mở rộng đàm phán quốc tế, xây dựng bộ máy chính quyền tương lai.",
+    id: "digital",
+    title: "Chuyển đổi số Quốc gia",
+    icon: Monitor,
+    field: "Công nghệ",
+    color: "cyan",
+    description: "Đi đầu ứng dụng và sáng tạo công nghệ số trong kỷ nguyên mới.",
+    detail: "Thanh niên là lực lượng lõi xung kích trong chuyển đổi số quốc gia, ứng dụng AI, dữ liệu lớn. Tiên phong khởi nghiệp công nghệ, xây dựng nền kinh tế số và quản trị thông minh.",
+    objectives: ["Làm chủ công nghệ lõi (AI, Cloud, Blockchain)", "Xây dựng hệ thống phần mềm phục vụ cộng đồng", "Lan tỏa kỹ năng số cho toàn dân"]
   },
   {
     id: "economy",
     title: "Tiên phong Kinh tế",
     icon: Briefcase,
     field: "Kinh tế",
-    description: "Nòng cốt cách mạng 4.0, nguồn nhân lực CNH-HĐH",
-    detail: "Thế hệ tiên phong trong CMCN 4.0. Lực lượng xung kích hội nhập kinh tế quốc tế, giao lưu kết nối chia sẻ kiến thức, mở rộng công nghệ. Nguồn nhân lực trọng yếu quyết định tính mới, cập nhật, sáng tạo đa phương diện kinh tế.",
+    color: "amber",
+    description: "Nòng cốt cách mạng 4.0, nguồn nhân lực CNH-HĐH.",
+    detail: "Lực lượng xung kích hội nhập kinh tế quốc tế, giao lưu kết nối chia sẻ kiến thức, mở rộng công nghệ. Là nguồn nhân lực trọng yếu quyết định tính mới, cập nhật, sáng tạo đa phương diện.",
+    objectives: ["Phát triển nền kinh tế tri thức", "Nâng cao năng lực cạnh tranh quốc tế", "Khởi nghiệp đổi mới sáng tạo"]
+  },
+  {
+    id: "politics",
+    title: "Xung kích Chính trị",
+    icon: Vote,
+    field: "Chính trị",
+    color: "red",
+    description: "Tiên phong, gương mẫu thực hiện nhiệm vụ Đảng, Nhà nước giao phó.",
+    detail: "Thanh niên là lực lượng nòng cốt trong kiến thiết đất nước. Dẫn đầu xu hướng toàn cầu hóa, mở rộng đối ngoại, xây dựng bộ máy chính quyền tương lai trong sạch, vững mạnh.",
+    objectives: ["Gương mẫu đổi mới sáng tạo", "Nâng cao chất lượng đoàn viên", "Bảo vệ nền tảng tư tưởng của Đảng"]
   },
   {
     id: "culture",
     title: "Kết nối Văn hóa",
     icon: Palette,
     field: "Văn hóa - Xã hội",
-    description: "Kế thừa và phát triển bản sắc dân tộc trong hội nhập",
-    detail: "Thanh niên là nòng cốt lưu giữ, kế thừa nét đẹp văn hóa dân tộc. Công nghệ đưa thế hệ trẻ lại gần nhau bất kể khoảng cách địa lý. Xây dựng cộng đồng quốc tế với tính truyền thống, là chìa khóa bảo tồn văn hóa trong toàn cầu hóa.",
-  },
-  {
-    id: "digital",
-    title: "Chuyển đổi số",
-    icon: Monitor,
-    field: "Công nghệ",
-    description: "Đi đầu ứng dụng và sáng tạo công nghệ số",
-    detail: "Xung kích trong chuyển đổi số quốc gia, ứng dụng AI, dữ liệu lớn. Khởi nghiệp công nghệ, xây dựng nền kinh tế số và quản trị thông minh.",
+    color: "purple",
+    description: "Kế thừa và phát triển bản sắc dân tộc trong hội nhập.",
+    detail: "Nòng cốt lưu giữ nét đẹp văn hóa dân tộc. Công nghệ đưa thế hệ trẻ lại gần nhau bất kể khoảng cách địa lý. Xây dựng cộng đồng quốc tế với tính truyền thống là chìa khóa bảo tồn văn hóa.",
+    objectives: ["Xây dựng chuẩn mực văn hóa mới", "Tiếp biến chọn lọc tinh hoa nhân loại", "Chống lại sự lai căng văn hóa"]
   },
   {
     id: "defense",
     title: "Bảo vệ Tổ quốc",
     icon: Shield,
     field: "Quốc phòng",
-    description: "Sẵn sàng chiến đấu, bảo vệ chủ quyền và an ninh",
-    detail: "Kế thừa truyền thống 'cảm tử cho Tổ quốc quyết sinh'. Tham gia bảo vệ biên giới, biển đảo, an ninh mạng. Tinh thần 'tình nguyện xây dựng và bảo vệ Tổ quốc'.",
+    color: "green",
+    description: "Sẵn sàng chiến đấu, bảo vệ chủ quyền và an ninh quốc gia.",
+    detail: "Kế thừa truyền thống 'cảm tử cho Tổ quốc quyết sinh'. Tham gia bảo vệ biên giới, biển đảo, và đặc biệt là mặt trận an ninh mạng trong bối cảnh chiến tranh thông tin hiện đại.",
+    objectives: ["Bảo vệ an ninh biên giới và biển đảo", "Bảo vệ an ninh không gian mạng", "Xây dựng lực lượng dân quân tự vệ"]
   },
 ];
 
-const Station3Missions = () => {
-  const [showMcScript, setShowMcScript] = useState(false);
-  const [activeMission, setActiveMission] = useState<string | null>(null);
-  const [completedMissions, setCompletedMissions] = useState<Set<string>>(new Set());
+// Helper để map màu sắc cho từng lĩnh vực
+const colorMap: Record<string, { text: string, bg: string, border: string, shadow: string, bar: string }> = {
+  cyan: { text: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/50", shadow: "shadow-[0_0_15px_rgba(6,182,212,0.4)]", bar: "bg-cyan-400" },
+  amber: { text: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/50", shadow: "shadow-[0_0_15px_rgba(251,191,36,0.4)]", bar: "bg-amber-400" },
+  red: { text: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/50", shadow: "shadow-[0_0_15px_rgba(239,68,68,0.4)]", bar: "bg-red-400" },
+  purple: { text: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/50", shadow: "shadow-[0_0_15px_rgba(168,85,247,0.4)]", bar: "bg-purple-400" },
+  green: { text: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/50", shadow: "shadow-[0_0_15px_rgba(34,197,94,0.4)]", bar: "bg-green-400" },
+};
 
-  const handleMissionClick = (id: string) => {
-    setActiveMission(activeMission === id ? null : id);
-    const newCompleted = new Set(completedMissions);
-    newCompleted.add(id);
-    setCompletedMissions(newCompleted);
-  };
+const Station3Missions = ({ onNext }: { onNext?: () => void }) => {
+  const [showMcScript, setShowMcScript] = useState(false);
+  const [activeRoleId, setActiveRoleId] = useState<string>(roles[0].id);
+
+  const activeRole = roles.find(r => r.id === activeRoleId)!;
+  const cTheme = colorMap[activeRole.color];
 
   return (
     <div className="min-h-screen p-4 md:p-8 bg-grid-pattern relative">
       <div className="absolute inset-0 bg-radial-glow pointer-events-none" />
 
-      <div className="relative z-10 max-w-5xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-glow-magenta/30 bg-glow-magenta/5 mb-3">
-            <Swords className="w-3 h-3 text-glow-magenta" />
-            <span className="text-xs font-display text-glow-magenta uppercase tracking-wider">Trạm 3</span>
+      <div className="relative z-10 max-w-6xl mx-auto">
+        
+        {/* Header (Đã bỏ thanh EXP) */}
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 mb-3 shadow-[0_0_10px_rgba(217,70,239,0.3)]">
+            <Target className="w-4 h-4 text-fuchsia-400" />
+            <span className="text-xs font-bold text-fuchsia-400 uppercase tracking-wider">Trạm 3: Vai Trò Cốt Lõi</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-display font-bold text-primary text-glow-gold">
-            Vai Trò & Nhiệm Vụ
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+            Năm Trụ Cột <span className="text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.8)]">Sứ Mệnh Mới</span>
           </h2>
-          <p className="text-muted-foreground text-sm mt-2">Khu vực Nhiệm vụ – Khám phá vai trò xung kích của thanh niên</p>
-          <div className="mt-3 text-xs text-muted-foreground">
-            Tiến trình: {completedMissions.size}/{missions.length} nhiệm vụ đã khám phá
-            <div className="w-48 h-1.5 bg-surface-dark rounded-full mx-auto mt-2 overflow-hidden">
-              <motion.div
-                className="h-full bg-glow-magenta rounded-full"
-                animate={{ width: `${(completedMissions.size / missions.length) * 100}%` }}
-              />
-            </div>
-          </div>
+          <p className="text-slate-400 text-sm mt-2">Phân tích vai trò xung kích của thanh niên trên các mặt trận trọng điểm</p>
         </motion.div>
 
-        {/* Quote */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="bg-surface-medium/40 border border-primary/20 rounded-xl p-4 mb-8 text-center"
-        >
-          <p className="text-sm italic text-foreground/70">
-            "Đâu cần, thanh niên có; việc gì khó, thanh niên làm"
-          </p>
-          <p className="text-xs text-primary mt-1">— Chủ tịch Hồ Chí Minh</p>
-        </motion.div>
+        {/* Layout 2 Cột */}
+        <div className="grid lg:grid-cols-12 gap-6 items-start">
+          
+          {/* CỘT TRÁI: Danh sách Vai trò (Navigation) */}
+          <div className="lg:col-span-5 space-y-3">
+            {roles.map((role, i) => {
+              const isSelected = activeRoleId === role.id;
+              const rColor = colorMap[role.color];
 
-        {/* Mission Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {missions.map((mission, i) => (
-            <motion.button
-              key={mission.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-              onClick={() => handleMissionClick(mission.id)}
-              className={`text-left p-5 rounded-xl border transition-all ${
-                activeMission === mission.id
-                  ? "bg-glow-magenta/10 border-glow-magenta/40 glow-magenta"
-                  : completedMissions.has(mission.id)
-                  ? "bg-surface-medium/40 border-primary/20"
-                  : "bg-surface-medium/40 border-border hover:border-muted-foreground/30"
-              }`}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`p-2 rounded-lg ${activeMission === mission.id ? "bg-glow-magenta/20" : "bg-surface-dark"}`}>
-                  <mission.icon className={`w-5 h-5 ${activeMission === mission.id ? "text-glow-magenta" : "text-muted-foreground"}`} />
-                </div>
-                <div>
-                  <span className="text-[10px] font-display text-muted-foreground uppercase">{mission.field}</span>
-                  <h3 className="text-sm font-semibold">{mission.title}</h3>
-                </div>
-                {completedMissions.has(mission.id) && (
-                  <span className="ml-auto text-xs text-primary">✓</span>
-                )}
-              </div>
-              <p className="text-xs text-foreground/70 leading-relaxed">{mission.description}</p>
-              {activeMission === mission.id && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-3 pt-3 border-t border-border"
+              return (
+                <motion.button
+                  key={role.id}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.1 }}
+                  onClick={() => setActiveRoleId(role.id)}
+                  className={`w-full text-left p-4 rounded-xl border transition-all duration-300 relative overflow-hidden ${
+                    isSelected 
+                      ? `${rColor.bg} ${rColor.border} ${rColor.shadow} scale-[1.02]` 
+                      : "bg-slate-800/40 border-slate-700 hover:bg-slate-800 hover:border-slate-500"
+                  }`}
                 >
-                  <p className="text-xs text-foreground/60 leading-relaxed">{mission.detail}</p>
-                </motion.div>
-              )}
-            </motion.button>
-          ))}
+                  {isSelected && <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/5 opacity-50" />}
+                  
+                  <div className="relative z-10 flex items-center gap-4">
+                    {/* Icon */}
+                    <div className={`p-3 rounded-xl flex-shrink-0 ${isSelected ? rColor.bg : 'bg-slate-800'}`}>
+                      <role.icon className={`w-6 h-6 ${isSelected ? rColor.text : 'text-slate-400'}`} />
+                    </div>
+                    
+                    {/* Info */}
+                    <div className="flex-1">
+                      <p className={`text-[10px] font-bold uppercase tracking-wider mb-1 ${isSelected ? rColor.text : 'text-slate-500'}`}>
+                        {role.field}
+                      </p>
+                      <h3 className={`font-bold ${isSelected ? 'text-white' : 'text-slate-300'}`}>{role.title}</h3>
+                    </div>
+
+                    {/* Arrow Indicator */}
+                    {isSelected && (
+                      <ChevronRight className={`w-5 h-5 ${rColor.text}`} />
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* CỘT PHẢI: Bảng Chi tiết (Detail Dashboard) */}
+          <div className="lg:col-span-7">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeRoleId}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className={`bg-slate-900/80 backdrop-blur-md rounded-2xl border p-6 md:p-8 relative overflow-hidden min-h-[480px] flex flex-col ${cTheme.border} ${cTheme.shadow}`}
+              >
+                {/* Dấu Background mờ */}
+                <activeRole.icon className={`absolute -right-10 -top-10 w-64 h-64 opacity-[0.03] ${cTheme.text}`} />
+
+                {/* Status Header */}
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-700/50 pb-4 mb-6 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <BookOpen className={`w-5 h-5 ${cTheme.text}`} />
+                    <span className="text-sm font-bold text-slate-300 uppercase tracking-widest">Phân tích chuyên sâu</span>
+                  </div>
+                </div>
+
+                {/* Nội dung chính */}
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <h2 className={`text-3xl font-black mb-4 ${cTheme.text}`}>{activeRole.title}</h2>
+                  
+                  <div className="bg-slate-950/50 rounded-lg p-4 border border-slate-800 mb-6">
+                    <p className="text-base text-white font-medium leading-relaxed italic">
+                      "{activeRole.description}"
+                    </p>
+                  </div>
+
+                  <p className="text-sm text-slate-300 mb-8 leading-relaxed">
+                    {activeRole.detail}
+                  </p>
+
+                  {/* Trách nhiệm cụ thể (Objectives) */}
+                  <div className="mt-auto">
+                    <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2 uppercase tracking-wider border-b border-slate-700 pb-2">
+                      <Target className={`w-4 h-4 ${cTheme.text}`} /> Trách nhiệm trọng tâm
+                    </h4>
+                    <ul className="space-y-3">
+                      {activeRole.objectives.map((obj, idx) => (
+                        <motion.li 
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.2 + idx * 0.1 }}
+                          key={idx} 
+                          className="flex items-start gap-3 text-sm text-slate-300"
+                        >
+                          <div className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${cTheme.bar}`} />
+                          {obj}
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* Responsibilities section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8 bg-surface-medium/40 border border-border rounded-xl p-6"
-        >
-          <h3 className="font-display text-lg text-primary mb-4">Trách nhiệm cụ thể</h3>
-          <div className="grid md:grid-cols-2 gap-4 text-xs text-foreground/70">
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-foreground/90">🏛 Chính trị</p>
-              <ul className="space-y-1 list-disc list-inside">
-                <li>Gương mẫu đổi mới sáng tạo, làm chủ KHCN</li>
-                <li>Tăng cường quan hệ với Đoàn, Hội</li>
-                <li>Nâng cao chất lượng đoàn viên, tính tiên phong</li>
-                <li>Xây dựng Đảng, chính quyền trong sạch</li>
-              </ul>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-semibold text-foreground/90">🎨 Văn hóa - Xã hội</p>
-              <ul className="space-y-1 list-disc list-inside">
-                <li>Xây dựng nếp sống mới, chuẩn mực văn hóa mới</li>
-                <li>Bảo tồn và phát huy bản sắc dân tộc</li>
-                <li>Tiếp biến chọn lọc tinh hoa nhân loại</li>
-                <li>Phát triển thanh niên toàn diện</li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* MC Script */}
-        <div className="mt-8">
-          <button
-            onClick={() => setShowMcScript(!showMcScript)}
-            className="text-xs font-display text-primary hover:text-primary/80 transition-colors flex items-center gap-2"
-          >
+        {/* --- Nút Chuyển Trạm & Kịch Bản MC --- */}
+        <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-slate-800 pt-6">
+          <button onClick={() => setShowMcScript(!showMcScript)} className="text-sm font-bold text-fuchsia-500 hover:text-fuchsia-400 transition-colors inline-flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
-            {showMcScript ? "Ẩn kịch bản MC" : "Xem kịch bản MC"}
+            {showMcScript ? "Đóng Kịch Bản MC" : "Xem Kịch Bản MC"}
           </button>
-          {showMcScript && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="mt-3 bg-surface-dark/90 border border-primary/20 rounded-xl p-5 text-sm text-foreground/70 italic leading-relaxed"
-            >
-              <p className="mb-3">
-                "Trạm 3 – Khu vực Nhiệm vụ. Như Bác Hồ đã nói: 'Đâu cần, thanh niên có; việc gì khó, thanh niên làm'. 
-                Vậy cụ thể, thanh niên đang xung kích trên những mặt trận nào?"
-              </p>
-              <p className="mb-3">
-                "Thứ nhất – CHÍNH TRỊ. Thanh niên luôn là lực lượng tiên phong, gương mẫu thực hiện đường lối của Đảng. 
-                Họ dẫn đầu xu hướng toàn cầu hóa, mở rộng đối ngoại, là lực lượng nòng cốt trong bộ máy chính quyền tương lai."
-              </p>
-              <p className="mb-3">
-                "Thứ hai – KINH TẾ. Thanh niên là thế hệ tiên phong của CMCN 4.0, nguồn nhân lực trọng yếu quyết định 
-                tính đổi mới, sáng tạo của nền kinh tế. Họ là lực lượng xung kích hội nhập kinh tế quốc tế."
-              </p>
-              <p className="mb-3">
-                "Thứ ba – VĂN HÓA XÃ HỘI. Thanh niên chính là chìa khóa kết nối truyền thống và hiện đại. 
-                Họ lưu giữ bản sắc dân tộc trong khi chủ động hội nhập văn hóa quốc tế."
-              </p>
-              <p className="mb-3">
-                "Thứ tư – CHUYỂN ĐỔI SỐ. Đây là vai trò hoàn toàn mới, đặc trưng của thế hệ số. 
-                Thanh niên đi đầu ứng dụng AI, dữ liệu lớn, khởi nghiệp công nghệ."
-              </p>
-              <p>
-                "Và cuối cùng – BẢO VỆ TỔ QUỐC. Kế thừa truyền thống 'cảm tử cho Tổ quốc', 
-                thanh niên ngày nay mở rộng mặt trận ra cả không gian mạng, bảo vệ chủ quyền số."
-              </p>
-            </motion.div>
+
+          {onNext && (
+            <button onClick={onNext} className="inline-flex items-center gap-2 px-6 py-2 bg-fuchsia-500/10 hover:bg-fuchsia-500/20 border border-fuchsia-500/50 text-fuchsia-400 rounded-full font-bold transition-all hover:scale-105 shadow-[0_0_15px_rgba(217,70,239,0.3)]">
+              Tiến vào Trạm 4: Giải Pháp <ArrowRight className="w-4 h-4" />
+            </button>
           )}
         </div>
+
+        {/* Khung Script MC */}
+        {showMcScript && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 bg-slate-900/90 border border-fuchsia-500/30 rounded-xl p-6 text-sm text-slate-300 italic leading-relaxed text-left">
+            <p className="mb-3 font-bold text-fuchsia-400">🎙️ Lời dẫn MC (Chuyên nghiệp, bám sát giáo trình):</p>
+            <p className="mb-3">
+              "Kính thưa thầy cô, sau khi nhận diện những đặc điểm cốt lõi, câu hỏi đặt ra là: Thanh niên sẽ ứng dụng sức mạnh đó vào đâu? Trạm 3 sẽ bóc tách 5 trụ cột sứ mệnh của thế hệ trẻ trong bối cảnh mới."
+            </p>
+            <p className="mb-3">
+              *(MC click vào Tab Chuyển đổi số)* "Đầu tiên và quan trọng nhất hiện nay: **Mặt trận Công nghệ**. Thanh niên không chỉ là người tiêu thụ ứng dụng, mà phải là người làm chủ công nghệ lõi như AI, Blockchain để kiến tạo nền kinh tế số quốc gia. Ngay tại giảng đường đại học, việc sinh viên tự tay phát triển các hệ thống phần mềm thực tiễn chính là minh chứng rõ nét nhất."
+            </p>
+            <p className="mb-3">
+              *(MC click vào Tab Kinh tế)* "Bên cạnh đó, trên **Mặt trận Kinh tế**, chúng ta là nguồn nhân lực trọng yếu, phát triển nền kinh tế tri thức để nâng cao năng lực cạnh tranh quốc gia trên trường quốc tế."
+            </p>
+            <p>
+              *(MC click qua lại các tab khác)* "Ngoài ra, thanh niên còn là trụ cột trong **Chính trị** (bảo vệ nền tảng tư tưởng), **Văn hóa** (bảo tồn bản sắc) và **Quốc phòng** (bảo vệ chủ quyền biên giới và an ninh mạng). Trách nhiệm là vô cùng to lớn. Vậy làm sao để chúng ta rèn luyện đủ năng lực gánh vác sứ mệnh này? Xin mời thầy cô và các bạn bước sang Trạm 4: Giải pháp phát triển!"
+            </p>
+          </motion.div>
+        )}
       </div>
     </div>
   );
