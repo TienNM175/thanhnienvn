@@ -278,6 +278,16 @@ const WorldMap = ({ onEnterCore }: WorldMapProps) => {
         )}
       </AnimatePresence>
 
+      {/* Credits */}
+      <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-1">
+        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] font-display">Thực hiện bởi:</p>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[15px] font-display font-semibold text-primary/70 hover:text-primary transition-colors cursor-default">Nguyễn Mạnh Tiến</p>
+          <p className="text-[15px] font-display font-semibold text-primary/70 hover:text-primary transition-colors cursor-default">Võ Thành Long</p>
+          <p className="text-[15px] font-display font-semibold text-primary/70 hover:text-primary transition-colors cursor-default">Lê Ngọc Tuấn</p>
+        </div>
+      </div>
+
       {/* Progress indicator */}
       <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
         {satellites.map(sat => (

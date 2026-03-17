@@ -34,7 +34,7 @@ const skillTree: SkillNode[] = [
     icon: GraduationCap,
     level: 1,
     colorTheme: "cyan",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=1000",
+    image: "https://bcp.cdnchinhphu.vn/zoom/600_315/334894974524682240/2024/11/2/img8978-17305474523121169264944-90-0-1270-1888-crop-1730547543525486367049.jpg",
     description: "Sự hỗ trợ từ phía hệ thống, Đảng và Nhà nước.",
     detail: "Đổi mới toàn diện chương trình giáo dục, kiến tạo môi trường phát triển tối ưu cho thanh niên. Cần có sự đồng bộ từ các cấp chính quyền để tạo bệ phóng vững chắc.",
     children: ["policy", "environment"],
