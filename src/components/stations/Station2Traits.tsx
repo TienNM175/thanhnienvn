@@ -108,7 +108,7 @@ const Station2Traits = ({ onNext }: { onNext?: () => void }) => {
           {/* CỘT PHẢI: Bảng Thẻ Định Tính */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white border-b border-slate-700 pb-2 mb-4">Các Thuộc Tính Đặc Trưng</h3>
-            <div className="grid grid-cols-1 gap-3 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="grid grid-cols-1 gap-3 max-h-[450px] overflow-y-auto pr-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               {traits.map((trait, i) => (
                 <motion.div
                   key={`stat-${i}`}
